@@ -1,0 +1,187 @@
+Public Sub MyInputsBox()
+
+'This is the First box for a Trend Code input'
+
+Dim dblAmount As Double
+dblAmount = InputBox("Please enter the Trend Code", "Enter Number")
+If dblAmount <> 0 Then
+      Range("B2") = dblAmount
+   Else
+      MsgBox "You did not enter a number!"
+   End If
+   
+   
+   
+   
+'This the Second box for Instrument input'
+Dim dblAmount2 As String
+dblAmount2 = InputBox("Please enter the Serial Number", "Enter Number")
+If dblAmount2 <> "" Then
+      Range("C2") = dblAmount2
+   Else
+      MsgBox "You did not enter a number!"
+   End If
+   
+   
+   
+   
+'This gets the Instrument that is inputted based on the Second Box'
+Dim Instrument As String
+Instrument = Strip(Sheet1.Range("C2"), False)
+Range("D2") = Instrument
+
+
+
+'This returns the date the instrument was released based on the Serial number given in the Second box'
+Dim row_used As Double
+Dim row_string As String
+Dim row_used2 As Double
+Dim row_string2 As String
+Dim row_convert As String
+Dim row_convert2 As String
+Dim DateValue As Date
+Dim DateValue2 As Date
+
+'Original Range("C2:C40000").Find(What:="AF20027922").Select'
+Sheets("Ferdigvare").Select
+Range("C2:C40000").Find(What:=dblAmount2).Select
+row_used = ActiveCell.Row
+row_string = row_used
+DateValue = CDate(Range("E" + row_string))
+
+
+row_used2 = row_used + 1
+row_convert = row_used2
+row_string2 = "C" + row_convert
+row_convert2 = "C40000"
+
+On Error Resume Next
+Range(row_string2, row_convert2).Find(What:=dblAmount2).Select
+row_used = ActiveCell.Row
+row_string = row_used
+DateValue2 = CDate(Range("E" + row_string))
+
+
+
+Sheets("Sheet1").Select
+Range("E2") = Format(DateValue, "DD-MM-YYYY")
+Range("E3") = Format(DateValue2, "DD-MM-YYYY")
+
+
+Dim releasedate As String
+Dim releasedate2 As String
+releasedate = Format(DateValue, "DD-MM-YYYY")
+releasedate2 = Format(DateValue2, "DD-MM-YYYY")
+
+' Set a string to be todays date in the appropriate format
+Dim today As String
+today = Format(Date, "DD-MM-YYYY")
+
+
+
+
+'Initialization of many strings for the output'
+Dim InformationCode As String
+Dim Review As String
+Dim Performed As String
+Dim Release As String
+Dim Agile As String
+Dim Salesforce As String
+Dim Final As String
+Dim IC1 As String
+Dim IC2 As String
+Dim IC3 As String
+Dim Rationale As String
+Dim IS1 As String
+Dim IS2 As String
+Dim IS3 As String
+Dim IS4 As String
+
+Review = "Review of manufacturing records – Device History Records (DHR):"
+Performed = "Review performed on " + dblAmount2 + " " + "per " + today
+
+If Range("E2") = Range("E3") Then
+Range("E3").ClearContents
+Release = "a) Instrument release history (SAP): " + releasedate
+Else
+Release = "a) Instrument release history (SAP): " & vbNewLine + "First Release: " + releasedate & vbNewLine + "Second Release: " + releasedate2
+End If
+
+'If IsEmpty(Sheet1.Range("E3")) Then
+'Release = "a) Instrument release history (SAP): " + releasedate
+'Else
+'Release = "a) Instrument release history (SAP): " + "First Release: " + releasedate & vbNewLine + "Second Release: " + releasedate2
+'End If
+
+Agile = "b) Relevant QI/CAPA from Agile: No Findings"
+Salesforce = "c) Salesforce: No Findings"
+
+Final = "Closure review: Ahmad Bosset Ali " + today + " The complaint file was reviewed against the closure criteria in QS04.01 Complaint Handling (D10000896) rev. AQ, Appendix 5 and and all applicable criteria were satisfied."
+
+
+If Range("B2") = 3252 And Range("D2") = "AF" Then
+
+InformationCode = "The complaint description matches a previous performed investigation for this type of issue, therefore further investigation is not required. Reference: D10027913."
+IC1 = "The Known Investigation Report addresses the causes of information code 302 with the Afinion 2. Information code 302 can be caused by a variety of potential root causes such as leaking sample pump, loose gripper pin, cartridge door misalignment, and cracked lid motor bracket. "
+IC2 = "The issue has been investigated, the associated risk is acceptable and is within the predicted occurrence rate in the FMEA and the failure rate is monitored by tracking and trending according to QS04.07 Complaint Product Trending (D10027603). "
+IC3 = "The investigation determined that the information code 302 is not related to product results, inadequate instructions for use or inaccurate labels. Therefore, it does not represent a Potential for Product Deficiency as defined in QS04.01 Complaint Handling, D10000896. The conclusion is supported by the Monthly Complaint Product Trend Report D10030716 rev AQ.  "
+Rationale = "The complaint is not escalated to initiate further investigation as the issue has been previously investigated. The reported event has low risk and is not related to product results, inadequate instructions for use or inaccurate labels, and therefore it is not considered a Potential Product Deficiency. Refer to D10027913 for further investigation details."
+IS1 = "The analyzer is designed with a number of failsafe mechanisms which will abort the test and display information code 302 if the analyzer is not able to properly complete the test. If the information code 302 persists after troubleshooting, the analyzer needs to be returned and replaced. "
+IS2 = "It should be noted that the User Manual provides instructions in the Information Codes and Troubleshooting section on what actions should be taken by the users when dealing with this analyzer failure: “Restart the analyzer and run controls. Repeat the test with a new sample and test cartridge”."
+IS3 = "The case details were reviewed along with internal records and no nonconformances were identified. There were no adverse patient effects and no clinically significant delay in the procedure reported in the complaint case. Our investigation determined that there is no indication that the reported issue is related to product results, inadequate instructions for use or inaccurate labeling. Customer complaints will continue to be monitored to ensure control limits are not exceeded and ensure product's performance meets customers' expectations. "
+IS4 = "Thank you for taking the time to bring this event to our attention. If we can provide any further assistance, please do not hesitate to contact us."
+
+'Provides the output based on the Inputs'
+Debug.Print Review
+Debug.Print Performed
+Debug.Print Release
+Debug.Print Agile
+Debug.Print Salesforce
+Debug.Print ""
+Debug.Print ""
+Debug.Print InformationCode
+Debug.Print ""
+Debug.Print ""
+Debug.Print Final
+Debug.Print ""
+Debug.Print ""
+Debug.Print ""
+Debug.Print ""
+Debug.Print "INVESTIGATION CONCLUSION"
+Debug.Print ""
+Debug.Print ""
+Debug.Print IC1
+Debug.Print ""
+Debug.Print IC2
+Debug.Print ""
+Debug.Print IC3
+Debug.Print ""
+Debug.Print ""
+Debug.Print ""
+Debug.Print ""
+Debug.Print "RATIONALE FOR NOT ESCALATING"
+Debug.Print ""
+Debug.Print ""
+Debug.Print Rationale
+Debug.Print ""
+Debug.Print ""
+Debug.Print ""
+Debug.Print ""
+Debug.Print "INVESTIGATION SUMMARY"
+Debug.Print ""
+Debug.Print ""
+Debug.Print ""
+Debug.Print IS1
+Debug.Print ""
+Debug.Print IS2
+Debug.Print ""
+Debug.Print IS3
+Debug.Print ""
+Debug.Print IS4
+
+End If
+   
+   
+End Sub
+
+
